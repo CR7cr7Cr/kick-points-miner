@@ -1,0 +1,32 @@
+name: Kick Points Miner
+on:
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+jobs:
+  run-miner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install cloudscraper loguru
+
+      - name: Create Config File
+        run: |
+          echo '{
+            "authorization": "${{ secrets.AUTH_TOKEN }}",
+            "channels": ["${{ secrets.CHANNELS }}"]
+          }' > config.json
+
+      - name: Start Mining
+        run: python main.py
