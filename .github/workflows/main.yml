@@ -24,9 +24,12 @@ jobs:
       - name: Create Config File
         run: |
           echo '{
-            "authorization": "${{ secrets.AUTH_TOKEN }}",
-            "channels": ["${{ secrets.CHANNELS }}"]
+            "channels": ["${{ secrets.CHANNELS }}"],
+            "authorization": "Bearer ${{ secrets.AUTH_TOKEN }}",
+            "wait_times": {
+              "livestream_active": { "min": 120, "max": 300 },
+              "livestream_inactive": 300,
+              "error_wait": 180
+            },
+            "messages": ["[emote:1730752:emojiAngel]", "[emote:1730753:emojiAngry]"]
           }' > config.json
-
-      - name: Start Mining
-        run: python main.py
